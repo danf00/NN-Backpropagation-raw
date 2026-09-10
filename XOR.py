@@ -6,6 +6,7 @@ bh = [0.1, -0.2, 0.05, 0.3]
 wo = [0.7, -0.5, 0.3, 0.9]
 bo = -0.1
 
+#
 
 def sigmoid(x):
     return 1/(math.exp(-x) + 1)
