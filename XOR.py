@@ -39,14 +39,27 @@ def forwardpass(wh, wo, bh, bo):
     return z1, a1, z2, a2, label, input
 
 learning_rate = 0.2
-
-for _ in range(50000):
+epochs = 20000
+counter = 0
+correct = 0
+false = 0
+for epoch in range(epochs):
     z1, a1, z2, a2, label, input = forwardpass(wh, wo, bh, bo)
+    #print("label:", label, ", pred: ", round(a2), ", loss: ", round((label - a2)**2, 3))
+    if counter == 100:
+        counter = 0
+        print(epoch, ": correct: ", correct, ", false: ", false)
+        correct = 0
+        false = 0
+    counter += 1
+    if label == round(a2):
+        correct += 1
+    else:
+        false += 1
 
-    print("label:", label, ", pred: ", round(a2), ", loss: ", round((label - a2)**2, 3))
-
+    
     delta_out = dLdivdaout(label, a2) * derivative_sigmoid(a2)
-    bo = delta_out
+    bo = bo - learning_rate * delta_out
     dwo = [0, 0, 0, 0]
     for c in range(len(a1)):
         dwo[c] = a1[c] * delta_out 
@@ -54,7 +67,7 @@ for _ in range(50000):
     delta_h = [0, 0, 0, 0]
     for h in range(len(delta_h)):
         delta_h[h] = delta_out * wo[h] * derivative_sigmoid(a1[h])
-    bh = delta_h
+    bh = [bh[i] - learning_rate * delta_h[i] for i in range(len(bh))]
     dwh = []
     for u in range(4):
         buffer = (delta_h[u]*input[0], delta_h[u]*input[1])
@@ -68,4 +81,3 @@ for _ in range(50000):
         new_wh.append(buffer_2)
 
     wh  = new_wh
-
