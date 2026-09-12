@@ -9,13 +9,33 @@ bo = -0.1
 #
 
 def sigmoid(x):
+    """
+    1/1+e^-z
+    """
     return 1/(math.exp(-x) + 1)
 
 def derivative_sigmoid(x):
+    """
+    Ableitung der sigmoid Funktion
+    S(x)=1/1+e^-x
+    äussere Ableitung -> -1 * (1+e^-x)^-2
+    innere Ableitung nach x -> e^-x*(-1)=e^-x
+    Kettenregel zusammemgesetzt -> S'() = e^-x/(1+e^-x)^2
+    Umformen durch erweiterung -> 1+e^-x-1/(1+e^-x)^2 -> 1/1+e^-x - (1/1+e^-x * 1/1+e^-x)
+    1/1+e^-x ersetzen durch S()
+    Ausklammern -> S'() = S(x) * (1-S())
+    """
     return x * (1 - x)
 
 def dLdivdaout(y, aout):
-    return -(y - aout)
+    """
+    Erklärung für die Ableitung der Lossfunktion:
+    L=1/2(y-aout)^2
+    innere Ableitung -> y-aout = 0 - 1 = -1
+    äussere Ableitung -> 1/2u^2 = u 
+    Kettenregel zusamgesetzt -> u * -1 = -(y - aout)
+    """
+    return -y + aout
 
 def forwardpass(wh, wo, bh, bo):
     z1 = [0, 0, 0, 0]
